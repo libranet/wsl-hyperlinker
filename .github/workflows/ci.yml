@@ -24,7 +24,7 @@ env:
 jobs:
   lint:
     name: Lint (prek hooks)
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-26.04  # pinned: ubuntu-latest moves between releases
     steps:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1  # v7.0.1
         with:
@@ -47,7 +47,7 @@ jobs:
 
   test:
     name: Test (Rust ${{ matrix.toolchain }})
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-26.04  # pinned: ubuntu-latest moves between releases
     strategy:
       fail-fast: false  # finish both toolchains even if one fails
       matrix:
