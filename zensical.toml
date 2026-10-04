@@ -10,6 +10,7 @@ nav = [
   { "Installation" = "installation.md" },
   { "How to use" = "usage.md" },
   { "Architecture" = "architecture.md" },
+  { "Changelog" = "changelog.md" },
 ]
 repo_name = "libranet/wsl-hyperlinker"
 repo_url = "https://github.com/libranet/wsl-hyperlinker"

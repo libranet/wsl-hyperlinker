@@ -1,0 +1,67 @@
+# GitHub Actions workflow for wsl-hyperlinker: lint and test on every push and pull request.
+# Reference: https://docs.github.com/en/actions/reference/workflows-and-actions/workflow-syntax
+# Syntax: YAML (https://yaml.org)
+# Actions are pinned to a full commit SHA, with the release tag in a comment.
+
+name: CI
+
+on:
+  pull_request:
+  push:
+    branches: [main]
+  workflow_dispatch:  # run by hand from the Actions tab
+
+permissions:
+  contents: read  # read-only token: no job writes to the repository
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true  # a new push cancels the run for the previous one
+
+env:
+  CARGO_TERM_COLOR: always
+
+jobs:
+  lint:
+    name: Lint (prek hooks)
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1  # v7.0.1
+        with:
+          persist-credentials: false
+      - uses: dtolnay/rust-toolchain@7e38f4b43b4db5c8dd498af069a4f6196df1d067  # master
+        with:
+          components: clippy, rustfmt
+          toolchain: stable
+      - uses: Swatinem/rust-cache@6323deb102c322ba6fcbdcafc7e3dddab59af2b6  # v2.9.2
+        with:
+          workspaces: ". -> var/target"  # target-dir from .cargo/config.toml
+      - uses: extractions/setup-just@53165ef7e734c5c07cb06b3c8e7b647c5aa16db3  # v4.0.0
+        with:
+          just-version: "1.58.0"  # the prek hooks call the justfile recipes
+      - run: pipx install zensical==0.0.67  # same version as .readthedocs.yaml
+      # Runs the pre-commit hooks from prek.toml on all files: built-in checks, fmt, clippy, docs.
+      - uses: j178/prek-action@4e14d07f9231acabce116ccfca13b13dd9755ece  # v3.0.0
+        with:
+          prek-version: "0.5.4"
+
+  test:
+    name: Test (Rust ${{ matrix.toolchain }})
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false  # finish both toolchains even if one fails
+      matrix:
+        toolchain:
+          - stable
+          - "1.87"  # rust-version in Cargo.toml: the oldest supported compiler
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1  # v7.0.1
+        with:
+          persist-credentials: false
+      - uses: dtolnay/rust-toolchain@7e38f4b43b4db5c8dd498af069a4f6196df1d067  # master
+        with:
+          toolchain: ${{ matrix.toolchain }}
+      - uses: Swatinem/rust-cache@6323deb102c322ba6fcbdcafc7e3dddab59af2b6  # v2.9.2
+        with:
+          workspaces: ". -> var/target"  # target-dir from .cargo/config.toml
+      - run: cargo test --locked  # --locked: fail if Cargo.lock is out of date
