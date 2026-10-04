@@ -1,0 +1,6 @@
+# Cargo configuration for wsl-hyperlinker.
+# Reference: https://doc.rust-lang.org/cargo/reference/config.html
+# Syntax: TOML (https://toml.io)
+
+[build]
+target-dir = "var/target"  # relative to the project root, not to .cargo/

@@ -1,0 +1,7 @@
+# Git ignore rules for wsl-hyperlinker.
+# Reference: https://git-scm.com/docs/gitignore
+# Syntax: gitignore patterns (https://git-scm.com/docs/gitignore#_pattern_format)
+
+/.cache
+/bin
+/var

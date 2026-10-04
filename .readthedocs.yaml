@@ -1,0 +1,21 @@
+# Read the Docs configuration for wsl-hyperlinker (the documentation site).
+# Reference: https://docs.readthedocs.com/platform/stable/config-file/v2.html
+# Zensical guide: https://docs.readthedocs.com/platform/stable/intro/zensical.html
+# Syntax: YAML (https://yaml.org)
+
+version: 2
+
+build:
+  os: ubuntu-24.04
+  tools:
+    python: latest
+  jobs:
+    install:
+      - pip install zensical==0.0.67  # pinned: Zensical is pre-1.0, same version as local builds
+    build:
+      html:
+        - zensical build --clean --strict  # --strict: fail on warnings, like the prek hook
+    post_build:
+      # Copy the built site (site_dir in zensical.toml) into the directory Read the Docs publishes.
+      - mkdir -p $READTHEDOCS_OUTPUT/html/
+      - cp --recursive var/html/* $READTHEDOCS_OUTPUT/html/

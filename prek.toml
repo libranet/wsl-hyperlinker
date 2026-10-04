@@ -1,0 +1,82 @@
+# prek configuration for wsl-hyperlinker (Git hooks).
+# Reference: https://prek.j178.dev/configuration/
+# Syntax: TOML (https://toml.io)
+#:schema https://www.schemastore.org/prek.json
+
+default_install_hook_types = ["pre-commit", "pre-push"]  # hook types `prek install` sets up
+default_stages = ["pre-commit"]  # hooks without `stages` run on commit only
+
+
+# Built-in hooks: fast checks implemented inside prek, no download needed.
+[[repos]]
+repo = "builtin"
+
+[[repos.hooks]]
+args = ["--markdown-linebreak-ext", "md"]  # keep two trailing spaces: a Markdown line break
+id = "trailing-whitespace"
+
+[[repos.hooks]]
+id = "end-of-file-fixer"
+
+[[repos.hooks]]
+args = ["--fix", "lf"]  # LF only, also for files edited on the Windows side
+id = "mixed-line-ending"
+
+[[repos.hooks]]
+id = "check-toml"
+
+[[repos.hooks]]
+id = "check-merge-conflict"
+
+[[repos.hooks]]
+id = "check-case-conflict"
+
+[[repos.hooks]]
+id = "check-illegal-windows-names"
+
+[[repos.hooks]]
+id = "check-symlinks"
+
+[[repos.hooks]]
+id = "check-added-large-files"
+
+[[repos.hooks]]
+id = "detect-private-key"
+
+
+# Project hooks: run the justfile recipes, so each command is defined once.
+[[repos]]
+repo = "local"
+
+[[repos.hooks]]
+entry = "just fmt-check"
+files = '(\.rs|rustfmt\.toml)$'
+id = "fmt"
+language = "system"
+name = "cargo fmt --check"
+pass_filenames = false
+
+[[repos.hooks]]
+entry = "just lint"
+files = '(\.rs|Cargo\.toml|Cargo\.lock|\.cargo/config\.toml)$'
+id = "clippy"
+language = "system"
+name = "cargo clippy"
+pass_filenames = false
+
+[[repos.hooks]]
+entry = "just docs"
+files = '^(docs/|zensical\.toml$)'
+id = "docs"
+language = "system"
+name = "zensical build --strict"
+pass_filenames = false
+
+[[repos.hooks]]
+entry = "just test"
+files = '(\.rs|Cargo\.toml|Cargo\.lock)$'
+id = "test"
+language = "system"
+name = "cargo test"
+pass_filenames = false
+stages = ["pre-push"]  # slower: run before push, not on every commit

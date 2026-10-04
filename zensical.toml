@@ -1,0 +1,78 @@
+# Zensical configuration for wsl-hyperlinker (the documentation site).
+# Reference: https://zensical.org/docs/setup/basics/
+# Syntax: TOML (https://toml.io); keys mirror mkdocs.yml / Material for MkDocs settings.
+
+[project]
+docs_dir = "docs"
+nav = [
+  { "Home" = "index.md" },
+  { "Analysis" = "analysis.md" },
+  { "Installation" = "installation.md" },
+  { "How to use" = "usage.md" },
+  { "Architecture" = "architecture.md" },
+]
+repo_name = "libranet/wsl-hyperlinker"
+repo_url = "https://github.com/libranet/wsl-hyperlinker"
+site_description = "Rewrite terminal hyperlinks so Windows Terminal can open them from WSL"
+site_dir = "var/html"
+site_name = "wsl-hyperlinker"
+site_url = "https://wsl-hyperlinker.readthedocs.io/"  # canonical URL on Read the Docs
+
+
+[project.markdown_extensions]
+admonition = {}  # !!! note / !!! warning call-outs
+attr_list = {}
+def_list = {}
+footnotes = {}
+md_in_html = {}
+"pymdownx.details" = {}  # collapsible ??? call-outs
+"pymdownx.highlight" = { anchor_linenums = true, line_spans = "__span", pygments_lang_class = true }
+"pymdownx.inlinehilite" = {}
+"pymdownx.keys" = {}  # ++ctrl+c++ keyboard keys
+"pymdownx.superfences" = {}
+"pymdownx.tabbed" = { alternate_style = true }
+"pymdownx.tasklist" = { custom_checkbox = true }
+toc = { permalink = true }
+
+
+[project.theme]
+features = [
+  "content.code.copy",
+  "navigation.footer",
+  "navigation.instant",
+  "navigation.top",
+  "navigation.tracking",
+  "search.highlight",
+  "toc.follow",
+]
+language = "en"
+variant = "classic"  # the Material for MkDocs look (default is "modern")
+
+
+[project.theme.icon]
+logo = "lucide/link"
+
+
+# Palettes: the first entry follows the system setting; the toggle cycles through them.
+[[project.theme.palette]]
+accent = "indigo"
+media = "(prefers-color-scheme)"
+primary = "indigo"
+toggle.icon = "lucide/sun-moon"
+toggle.name = "Switch to light mode"
+
+[[project.theme.palette]]
+accent = "indigo"
+media = "(prefers-color-scheme: light)"
+primary = "indigo"
+scheme = "default"  # light scheme
+toggle.icon = "lucide/sun"
+toggle.name = "Switch to dark mode"
+
+[[project.theme.palette]]
+accent = "indigo"
+media = "(prefers-color-scheme: dark)"
+primary = "indigo"
+scheme = "slate"  # dark scheme
+toggle.icon = "lucide/moon"
+toggle.name = "Switch to system preference"
