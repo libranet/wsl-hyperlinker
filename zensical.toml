@@ -17,7 +17,7 @@ repo_url = "https://github.com/libranet/wsl-hyperlinker"
 site_description = "Rewrite terminal hyperlinks so Windows Terminal can open them from WSL"
 site_dir = "var/html"
 site_name = "wsl-hyperlinker"
-site_url = "https://wsl-hyperlinker.readthedocs.io/"  # canonical URL on Read the Docs
+site_url = "https://wsl-hyperlinker.readthedocs.io/en/latest/"  # canonical URL on Read the Docs: the default version
 
 
 [project.markdown_extensions]
